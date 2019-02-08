@@ -7,25 +7,25 @@ exports.run = async (client, message, args) => {
       .setTitle("Maaf, Kamu Tidak Mempunyai Permissions Untuk Kick Members");
 return message.channel.send(embed);
   }
-  if (!message.guild.member(client.user).hasPermission("MANAGE_NICKNAMES")) return message.channel.send(`**${message.author.tag}** Maaf, Rendang Tidak Mempunyai Permissions \`KICK_MEMBERS\` Tolong Beri Permissions \`KICK_MEMBERS\` Terlebih Dahulu.`).then(msg=>msg.delete(5000))
+  if (!message.guild.member(client.user).hasPermission("MANAGE_NICKNAMES")) return message.channel.send(`**${message.author.tag}** Désolé, je ne possède pas la permission \`KICK_MEMBERS\`, veuillez me donner l'autorisation \`KICK_MEMBERS\` avant d'exécuter cette commande.`).then(msg=>msg.delete(5000))
   
   let toKick = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-  if(!toKick) return message.channel.sendMessage("Tidak Dapat Menemukan User ! Mohon Mention Terlebih Dahulu !");
+  if(!toKick) return message.channel.sendMessage("Utilisateur non mentionné, veuillez mentioner un utilisateur.");
   let reason = args.join(" ").slice(22);
-  if (toKick.hasPermission("KICK_MEMBERS")) return message.channel.send("Hmm Dia Tidak Dapat Dikick :(").then(msg => msg.delete(3000));
+  if (toKick.hasPermission("KICK_MEMBERS")) return message.channel.send("Utilisateur immunisé.").then(msg => msg.delete(3000));
   
   if (toKick.highestRole.position < message.guild.member(client.user).highestRole.position) {
    message.guild.member(toKick).kick(reason);
    try {
     if (!reason) {
-      toKick.send(`**${toKick.user.tag}** Kamu Sudah Dikick Dari**${message.guild.name}**`)
+      toKick.send(`**${toKick.user.tag}** Vous avez été expulsé du serveur par ${message.author.username}**`)
     } else {
-      toKick.send(`**${toKick.user.tag}** Kamu Sudah Dikick Dari **${message.guild.name}**
-Alasan: "${reason}"`);
+      toKick.send(`**${toKick.user.tag}** Vous avé été expulsé du serveur par ${message.author.username}**
+Motif : "${reason}"`);
     }
     let embedB = new RichEmbed()
     .setColor('RANDOM')
-    .setTitle('User Sudah Dikick Dari Server')
+    .setTitle('Utilisateur expulsé')
     .addField('username', toKick.user.username, true)
     .addField('ID', toKick.id, true)
     message.channel.send(embedB);
@@ -33,17 +33,17 @@ Alasan: "${reason}"`);
     console.log(e.message)
   }
   } else {
-   message.channel.send(`Saya Tidak Bisa Kick **${toKick.user.tag}** Karena Rolenya Lebih Tinggi Dari Saya Atau Rolenya Sama Dengan Saya.`)
+   message.channel.send(`Il m'est impossible d'expulser ${toKick.user.tag} car son rôle est égal où supérieur au mien.`)
   }
 }
  
 exports.conf = {
-  aliases: ['kick'],
+  aliases: ['kick','megahug'],
   cooldown: '5'
 }
 
 exports.help = {
   name: "kick",
-  description: 'Kick Seseorang Dari Servermu [ADMIN ONLY]',
-  usage: 'Kick [@mention someone]'
+  description: 'Expulse un membre du serveur. [MOD ONLY]',
+  usage: '!kick [@mention] (raison)'
 }
