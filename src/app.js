@@ -8,4 +8,4 @@ const client = new RendangClient({
 require('./handle/events')(client);
 require('./handle/module')(client);
 
-client.login(process.env.BOT_TOKEN);
+bot.login(process.env.BOT_TOKEN);
